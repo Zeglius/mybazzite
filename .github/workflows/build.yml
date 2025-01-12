@@ -89,20 +89,27 @@ jobs:
           sep-tags: " "
           sep-annotations: " "
 
+      # - name: Build Image
+      #   id: build_image
+      #   uses: redhat-actions/buildah-build@v2
+      #   with:
+      #     containerfiles: |
+      #       ./Containerfile
+      #     # Postfix image name with -custom to make it a little more descriptive
+      #     # Syntax: https://docs.github.com/en/actions/learn-github-actions/expressions#format
+      #     image: ${{ env.IMAGE_NAME }}
+      #     tags: ${{ steps.metadata.outputs.tags }}
+      #     labels: ${{ steps.metadata.outputs.labels }}
+      #     oci: false
+      #     extra-args: |
+      #       --disable-compression=false
       - name: Build Image
         id: build_image
-        uses: redhat-actions/buildah-build@v2
-        with:
-          containerfiles: |
-            ./Containerfile
-          # Postfix image name with -custom to make it a little more descriptive
-          # Syntax: https://docs.github.com/en/actions/learn-github-actions/expressions#format
-          image: ${{ env.IMAGE_NAME }}
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          oci: false
-          extra-args: |
-            --disable-compression=false
+        run: |
+          container=$(buildah build -t ${{ env.IMAGE_NAME }} --disable-compression=no -f Containerfile .)
+          while read -r tag; do
+            buildah tag $container ${{ env.IMAGE_NAME }}:$tag
+          done <<< ${{ steps.metadata.outputs.tags }}
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
       # This does not make your image faster to download, just provides better resumability and fixes a few errors.
