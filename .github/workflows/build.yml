@@ -106,7 +106,7 @@ jobs:
       - name: Build Image
         id: build_image
         run: |
-          container=$(buildah build -t ${{ env.IMAGE_NAME }} --disable-compression=no -f Containerfile .)
+          container=$(buildah build -t ${{ env.IMAGE_NAME }} --disable-compression=false -f Containerfile .)
           while read -r tag; do
             buildah tag $container ${{ env.IMAGE_NAME }}:$tag
           done <<< ${{ steps.metadata.outputs.tags }}
