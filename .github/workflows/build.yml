@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: '05 10 * * *'  # 10:05am UTC everyday
+  # schedule:
+  #   - cron: '05 10 * * *'  # 10:05am UTC everyday
   push:
     branches:
       - main
@@ -106,9 +106,14 @@ jobs:
       - name: Build Image
         id: build_image
         run: |
-          container=$(buildah build -t ${{ env.IMAGE_NAME }} --disable-compression=false -f Containerfile .)
+          container=$(sudo buildah build -t ${{ env.IMAGE_NAME }} --disable-compression=false -f Containerfile . || :)
+          if [[ -z $container ]]; then
+            echo "Build failed"
+            df 
+            exit 1
+          fi
           while read -r tag; do
-            buildah tag $container ${{ env.IMAGE_NAME }}:$tag
+            sudo buildah tag $container ${{ env.IMAGE_NAME }}:$tag
           done <<< ${{ steps.metadata.outputs.tags }}
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
