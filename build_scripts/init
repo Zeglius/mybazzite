@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+cd "$(dirname "$0")"
+
 old_shopt="$(shopt -p)"
 shopt -s nullglob
 for file in ./??-*.sh; do
@@ -12,4 +14,4 @@ for file in ./??-*.sh; do
     echo "::endgroup::"
 done
 
-$old_shopt
+eval "$old_shopt"
