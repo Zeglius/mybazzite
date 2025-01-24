@@ -15,7 +15,7 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing
 
 RUN --mount=type=tmpfs,dst=/var \
     --mount=type=tmpfs,dst=/tmp \
-    --mount=type=bind,src=./build.sh,dst=/tmp/build.sh,relabel=shared \
+    --mount=type=bind,src=./build_scripts,dst=/tmp/build_scripts,relabel=shared \
     mkdir -p /var/lib/alternatives && \
-    /tmp/build.sh && \
+    (shopt -s nullglob; for f in /tmp/build_scripts/*.sh; do bash "$f"; done) && \
     bootc container lint
