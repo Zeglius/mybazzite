@@ -13,9 +13,8 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
-RUN --mount=type=tmpfs,dst=/var \
-    --mount=type=tmpfs,dst=/tmp \
-    --mount=type=bind,src=./build_scripts,dst=/tmp/build_scripts,relabel=shared \
-    mkdir -p /var/lib/alternatives && \
+COPY ./build_scripts /tmp
+
+RUN mkdir -p /var/lib/alternatives && \
     (shopt -s nullglob; for f in /tmp/build_scripts/*.sh; do "$f"; done) && \
     bootc container lint
