@@ -1,3 +1,4 @@
+#!/usr/bin/bash -euo pipefail
 dnf5 config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo &&
     dnf5 install -y --setopt=install_weak_deps=0 \
         docker-ce \

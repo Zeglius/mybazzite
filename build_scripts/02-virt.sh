@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash -euo pipefail
 
 dnf5 install -y --setopt=install_weak_deps=0 \
     cockpit \

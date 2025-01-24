@@ -17,5 +17,5 @@ RUN --mount=type=tmpfs,dst=/var \
     --mount=type=tmpfs,dst=/tmp \
     --mount=type=bind,src=./build_scripts,dst=/tmp/build_scripts,relabel=shared \
     mkdir -p /var/lib/alternatives && \
-    (shopt -s nullglob; for f in /tmp/build_scripts/*.sh; do bash "$f"; done) && \
+    (shopt -s nullglob; for f in /tmp/build_scripts/*.sh; do "$f"; done) && \
     bootc container lint
