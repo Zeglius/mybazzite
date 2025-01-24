@@ -96,6 +96,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
+
       - name: Build Image
         id: build_image
         uses: redhat-actions/buildah-build@v2
@@ -110,8 +118,8 @@ jobs:
           oci: false
           layers: true
           extra-args: |
-            --cache-from=${{ env.IMAGE_REGISTRY }}
-            --cache-to=${{ env.IMAGE_REGISTRY }}
+            --cache-from=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
+            --cache-to=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
       # This does not make your image faster to download, just provides better resumability and fixes a few errors.
@@ -136,14 +144,6 @@ jobs:
       #     for tag in ${{ steps.metadata.outputs.tags }}; do
       #       podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
       #     done
-
-      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
-      # https://github.com/macbre/push-to-ghcr/issues/12
-      - name: Lowercase Registry
-        id: registry_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ env.IMAGE_REGISTRY }}
 
       - name: Push To GHCR
         uses: redhat-actions/push-to-registry@5ed88d269cf581ea9ef6dd6806d01562096bee9c # v2
