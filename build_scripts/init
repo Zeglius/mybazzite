@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+old_shopt="$(shopt -p)"
+shopt -s nullglob
+for file in ./??-*.sh; do
+    if [ ! -x "$file" ]; then
+        echo "::warning::Build script '$file' is not executable. Skipping..."
+    fi
+    echo "::group::START $file"
+    $file
+    echo "::endgroup::"
+done
+
+$old_shopt

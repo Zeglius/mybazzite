@@ -16,5 +16,6 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing
 COPY ./build_scripts /tmp
 
 RUN mkdir -p /var/lib/alternatives && \
-    (shopt -s nullglob; for f in /tmp/build_scripts/*.sh; do "$f"; done) && \
-    bootc container lint
+    /tmp/build_scripts/init
+
+RUN bootc container lint
