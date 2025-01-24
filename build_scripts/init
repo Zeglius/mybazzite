@@ -3,6 +3,23 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Steps to run before doing anything
+pre_stage_undo_writable_opt() {
+    if [[ -L /opt && "$(readlink -f /opt)" == "/var/opt" ]]; then
+        rm /opt
+        mkdir /opt
+    fi
+}
+
+# Run pre_stages
+builtin compgen -A function | while read -r stage; do
+    echo "::group::START PRESTAGE ${stage##pre_stage_}"
+    eval "$stage" || {
+        echo "::warning::Prestage '${stage##pre_stage_}' has failed"
+    }
+    echo "::endgroup::"
+done
+
 old_shopt="$(shopt -p)"
 shopt -s nullglob
 for file in ./??-*.sh; do
