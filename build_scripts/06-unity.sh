@@ -1,5 +1,5 @@
 #!/usr/bin/env -S bash -euo pipefail
-
+set -x
 trap 'skip_on_err "Error installing unityhub"' ERR
 
 dnf5 install -y --setopt=install_weak_deps=0 bindfs
