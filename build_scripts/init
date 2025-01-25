@@ -17,6 +17,16 @@ builtin compgen -A function | while read -r stage; do
     echo "::endgroup::"
 done
 
+# Display an error and skip a step successfully.
+# Meant to be used within steps.
+skip_on_err() {
+    local msg="$1"
+    echo "::warning::$msg. Skipping..."
+    exit 0
+}
+
+export -f skip_on_err
+
 old_shopt="$(shopt -p)"
 shopt -s nullglob
 for file in ./??-*.sh; do
