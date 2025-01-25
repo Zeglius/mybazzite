@@ -8,9 +8,18 @@ canon_dest=/var/opt/unityhub
 dest=/usr/share/factory/${canon_dest##/}
 mkdir -p "$dest"
 
-bindfs -o allow_other "${dest%%/unityhub}" /opt
+EXIT_TRAP="umount /opt || true"
 
-trap 'umount /opt' EXIT
+if [[ -L /opt ]]; then
+	mv /opt /.opt
+	mkdir /opt
+	EXIT_TRAP="$EXIT_TRAP; mv -T --exchange /.opt /opt && rm -r /.opt"
+fi
+
+# shellcheck disable=SC2064
+trap "$EXIT_TRAP" EXIT
+
+bindfs -o allow_other "${dest%%/unityhub}" /opt
 
 sh -c 'echo -e "[unityhub]\nname=Unity Hub\nbaseurl=https://hub.unity3d.com/linux/repos/rpm/stable\nenabled=1\ngpgcheck=1\ngpgkey=https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key\nrepo_gpgcheck=1" > /etc/yum.repos.d/unityhub.repo'
 dnf5 install -y --setopt=install_weak_deps=0 unityhub
