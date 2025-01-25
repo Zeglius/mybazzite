@@ -4,11 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Steps to run before doing anything
-pre_stage_undo_writable_opt() {
-    if [[ -L /opt && "$(readlink -f /opt)" == "/var/opt" ]]; then
-        rm /opt
-        mkdir /opt
-    fi
+pre_stage_00_dummy() {
+    true
 }
 
 # Run pre_stages
