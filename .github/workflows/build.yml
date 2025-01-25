@@ -120,6 +120,7 @@ jobs:
           extra-args: |
             --cache-from=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
             --cache-to=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
+            --cap-add=SYS_ADMIN
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
       # This does not make your image faster to download, just provides better resumability and fixes a few errors.
