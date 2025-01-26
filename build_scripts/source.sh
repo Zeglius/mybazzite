@@ -52,7 +52,7 @@ bind_state() {
 		for dir in "${_stateful_dirs[@]}"; do
 			umount --recursive "$dir"
 		done
-		unset -c _stateful_dirs
+		unset -v _stateful_dirs
 	}
 }
 
