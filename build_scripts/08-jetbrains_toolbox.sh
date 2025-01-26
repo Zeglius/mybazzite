@@ -23,7 +23,8 @@ fi
 
 pushd "$tmpdir"
 ./jetbrains-toolbox --appimage-extract
-mkdir -p "$dest" && mv -T squashfs-root "$dest"
+mkdir -p "$dest" && mv -T squashfs-root "$dest" && chmod 0755 "$dest"
+ln -s "$dest"/*.desktop /usr/share/applications/
 popd
 
 # Write a tmpfile entry
