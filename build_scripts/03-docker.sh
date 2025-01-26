@@ -7,4 +7,4 @@ dnf5 config-manager addrepo --from-repofile=https://download.docker.com/linux/fe
 		docker-buildx-plugin \
 		docker-compose-plugin
 
-dnf5 repo disable -y docker-ce-stable
+dnf5 config-manager setopt docker-ce-stable.enabled=0

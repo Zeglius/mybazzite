@@ -12,7 +12,7 @@ dnf5 install -y --setopt=install_weak_deps=0 unityhub
 
 unbind_state
 
-dnf5 repo disable -y unityhub
+dnf5 config-manager setopt unityhub.enabled=0
 
 # Write a tmpfile entry
 # See https://www.freedesktop.org/software/systemd/man/257/tmpfiles.d.html#L
