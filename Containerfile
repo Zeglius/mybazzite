@@ -15,11 +15,8 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing
 
 COPY ./build_scripts/ /tmp/build_scripts/
 
-RUN <<RUNEOF
-    set -euo pipefail
-    mkdir -p /var/lib/alternatives
-    /tmp/build_scripts/init
+RUN mkdir -p /var/lib/alternatives && \
+    /tmp/build_scripts/init && \
     ostree container commit
-RUNEOF
 
 RUN bootc container lint
