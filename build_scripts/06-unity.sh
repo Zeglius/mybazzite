@@ -2,8 +2,6 @@
 set -x
 trap 'skip_on_err "Error installing unityhub"' ERR
 
-dnf5 install -y --setopt=install_weak_deps=0 bindfs
-
 canon_dest=/var/opt/unityhub
 dest=/usr/share/factory/${canon_dest##/}
 
@@ -13,6 +11,8 @@ sh -c 'echo -e "[unityhub]\nname=Unity Hub\nbaseurl=https://hub.unity3d.com/linu
 dnf5 install -y --setopt=install_weak_deps=0 unityhub
 
 unbind_state
+
+dnf5 repo disable -y unityhub
 
 # Write a tmpfile entry
 # See https://www.freedesktop.org/software/systemd/man/257/tmpfiles.d.html#L

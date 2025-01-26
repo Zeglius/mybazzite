@@ -2,4 +2,4 @@
 
 trap 'skip_on_err "Couldnt setup RPM tooling"' ERR
 
-dnf5 install -y --setopt=install_weak_deps=0 rpmdevtools mock
+dnf5 install -y --setopt=install_weak_deps=0 mock mock-scm
