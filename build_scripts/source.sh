@@ -28,7 +28,7 @@ bind_state() {
 	echo >&2 "Checking if bindfs is available"
 	if ! type -P bindfs >$NULL; then
 		echo >&2 "bindfs is not available. Installing..."
-		dnf5 install -yq bindfs && dnf5 mark dependency bindfs
+		dnf5 install -yq bindfs && dnf5 mark -y dependency bindfs
 	else
 		echo >&2 "bindfs found at $(type -P bindfs)"
 	fi
