@@ -40,9 +40,9 @@ bind_state() {
 			exit 1
 		}
 		[[ ! -e $dir ]] && mkdir -p "$dir"
-		[[ ! -e "$FACTORY/$dir" ]] && mkdir -p "$FACTORY/$dir"
+		[[ ! -e "$FACTORY/${dir##/}" ]] && mkdir -p "$FACTORY/${dir##/}"
 
-		bindfs -o allow_other "$FACTORY/$dir" "$dir"
+		bindfs -o allow_other "$FACTORY/${dir##/}" "$dir"
 	done
 
 	# shellcheck disable=SC2317
