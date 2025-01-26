@@ -22,7 +22,7 @@ if [[ ! -f "$tmpdir/jetbrains-toolbox" ]]; then
 fi
 
 pushd "$tmpdir"
-./Jetbrains-toolbox --appimage-extract
+./jetbrains-toolbox --appimage-extract
 mkdir -p "$dest" && mv -T squashfs-root "$dest"
 popd
 
