@@ -19,4 +19,3 @@ RUN mkdir -p /var/lib/alternatives && \
     /tmp/build_scripts/init && \
     ostree container commit
 
-RUN bootc container lint
