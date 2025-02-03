@@ -5,6 +5,9 @@ if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
 	exit 1
 fi
 
+# More useful xtrace. See https://flokoe.github.io/bash-hackers-wiki/scripting/debuggingtips/?h=debu#making-xtrace-more-useful
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
 # Trap hook that displays an error and skip a step successfully.
 # Meant to be used within steps.
 skip_on_err() {
