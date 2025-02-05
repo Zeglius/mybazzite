@@ -14,7 +14,9 @@ mkdir -p "$dest"
 tmpdir=$(mktemp -d)
 trap 'rm -vrf $tmpdir' EXIT
 
-curl -sSLo "$tmpdir"/rustover.tar.gz https://download.jetbrains.com/rustrover/RustRover-2024.3.3.tar.gz
+VERSION="2024.3.4"
+
+curl -sSLo "$tmpdir"/rustover.tar.gz https://download.jetbrains.com/rustrover/RustRover-"$VERSION".tar.gz
 tar -xaf "$tmpdir"/rustover.tar.gz -C "$dest" --strip-components=1
 
 # Write a tmpfile entry
