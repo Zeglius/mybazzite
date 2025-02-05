@@ -5,4 +5,4 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 echo "::group::Setup podman testing"
 dnf5 -y --repo=updates-testing swap podman podman
-echo "::endgroup::Setup podman testing"
+echo "::endgroup::"
