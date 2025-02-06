@@ -7,7 +7,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 #dnf5 -y --repo=updates-testing swap podman podman
 #echo "::endgroup::"
 
-(
-	export NONINTERACTIVE=1
-	bash <(curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
-)
+export NONINTERACTIVE=1
+bash -x <(curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
