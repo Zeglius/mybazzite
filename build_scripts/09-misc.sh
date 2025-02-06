@@ -8,7 +8,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 #echo "::endgroup::"
 
 (
-	set +u
-	dnf5 install -yq --setopt=install_weaK_deps=0 git
+	export NONINTERACTIVE=1
 	bash <(curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
 )
