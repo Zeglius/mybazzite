@@ -9,6 +9,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 (
 	set +u
-	curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh |
-		bash
+	dnf5 install -yq --setopt=install_weaK_deps=0 git
+	bash <(curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
 )
