@@ -7,7 +7,7 @@ rm -rf /var/cache/libdnf5
 (
 	cd /var
 	find . -print0 | xargs -r0 rm -rf
-)
+) || :
 
 (
 	shopt -s nullglob
