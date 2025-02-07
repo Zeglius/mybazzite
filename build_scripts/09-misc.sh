@@ -8,4 +8,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 #echo "::endgroup::"
 
 export NONINTERACTIVE=1
-bash -x <(curl -sSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
+curl -fsSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh |
+	bash || echo "::notice::Failed to install: brew"
