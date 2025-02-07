@@ -15,8 +15,6 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing
 
 COPY ./build_scripts/ /tmp/build_scripts/
 
-VOLUME [ "/var" ]
-
 RUN mkdir -p /var/lib/alternatives && \
     /tmp/build_scripts/init && \
     ostree container commit
