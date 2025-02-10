@@ -1,4 +1,4 @@
-FROM ghcr.io/ublue-os/bazzite-nvidia:testing
+FROM ghcr.io/ublue-os/bazzite-nvidia:testing as mybazzite
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:stable
@@ -20,3 +20,19 @@ RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     /tmp/build_scripts/init && \
     ostree container commit
 
+# Cosmic env
+FROM mybazzite as mybazzite-cosmic
+
+RUN --mount=type=cache,dst=/var/cache/libdnf5 \
+    dnf5 -y copr enable ryanabx/cosmic-epoch && \
+    dnf5 -y install cosmic-desktop && \
+    dnf5 -y copr disable ryanabx/cosmic-epoch && \
+    : "Enable services" && \
+    systemctl disable gddm || : && \
+    systemctl disable sddm || : && \
+    systemctl enable cosmic-greeter && \
+    ostree container commit
+
+
+# Default to base image
+FROM mybazzite
