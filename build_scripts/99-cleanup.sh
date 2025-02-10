@@ -2,7 +2,7 @@
 
 dnf5 autoremove -y
 dnf5 clean all
-rm -rf /var/cache/libdnf5
+rm -rf /var/cache/libdnf5 || :
 
 (
 	cd /var
