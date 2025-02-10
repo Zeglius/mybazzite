@@ -118,6 +118,8 @@ jobs:
           oci: false
           layers: true
           extra-args: |
+            --cache-from=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
+            --cache-to=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
             --device=/dev/fuse
             --cap-add=SYS_ADMIN
             --target=mybazzite-cosmic
