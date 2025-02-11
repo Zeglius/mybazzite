@@ -18,6 +18,4 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 } || echo "::warning::Failed to install: brew"
 
 # kde plasma 6.3
-while read -r package; do
-	dnf5 -y swap --repo=updates-testing --allowerasing "$package" "$package" || :
-done < <(dnf5 repoquery --installed --queryformat='%{name}\n' "*plasma*")
+dnf5 -y upgrade --repo=updates-testing "*plasma*"
