@@ -19,5 +19,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 # kde plasma 6.3
 while read -r package; do
-	dnf5 -y swap --repo=updates-testing "$package" "$package"
+	dnf5 -y swap --repo=updates-testing --allowerasing "$package" "$package"
 done < <(dnf5 repoquery --installed --queryformat='%{name}\n' "*plasma*")
