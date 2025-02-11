@@ -122,7 +122,6 @@ jobs:
             --cache-to=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
             --device=/dev/fuse
             --cap-add=SYS_ADMIN
-            --target=mybazzite-cosmic
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
       # This does not make your image faster to download, just provides better resumability and fixes a few errors.
