@@ -18,6 +18,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 } || echo "::warning::Failed to install: brew"
 
 {
-	dnf5 install -y --setopt=install_weak_deps=0 /usr/libexec/podman/gvproxy ||
-		echo "::warning::Failed to install: gvproxy"
+	dnf5 install -y --setopt=install_weak_deps=0 podman-machine ||
+		echo "::warning::Failed to install: podman-machine"
 }
