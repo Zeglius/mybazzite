@@ -18,6 +18,7 @@ env:
   IMAGE_DESC: "My Customized Universal Blue Image"
   IMAGE_REGISTRY: "ghcr.io/${{ github.repository_owner }}" # do not edit
   ARTIFACTHUB_LOGO_URL: "https://avatars.githubusercontent.com/u/120078124?s=200&v=4" # You should put your own image here so that you get a fancy profile image on https://artifacthub.io/!
+  using_build_img: "true"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
@@ -34,6 +35,32 @@ jobs:
       id-token: write
 
     steps:
+      - name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v3.4.0
+
+      - name: Setup podman machine
+        if: env.using_build_img == 'true'
+        run: |
+          sudo apt update && sudo apt install -y qemu-system gvproxy
+          sudo mkdir -p /usr/libexec/podman/ && sudo ln -s /usr/bin/gvproxy /usr/libexec/podman/
+          sudo usermod -aG kvm $(id -un)
+          sudo chown $(id -un):kvm /dev/kvm
+
+      - name: Init podman machine
+        run: |
+          podman machine init --now
+          export DOCKER_HOST=unix://$(podman machine inspect | jq -r '.[].ConnectionInfo.PodmanSocket.Path')
+          echo "DOCKER_HOST=$DOCKER_HOST" >> $GITHUB_ENV
+          podman machine ssh <<'EOF'
+          echo "::group:: podman machine ssh"
+          sudo mkdir -p /etc/containers
+          sudo cp /usr/share/containers/storage.conf /etc/containers/storage.conf 
+          sudo sed -i -e 's|# use_composefs = "false"|use_composefs = "true"|g' /etc/containers/storage.conf
+          sudo podman system reset -f
+          echo "::endgroup::"
+          EOF
+          docker buildx install
+
       # These stage versions are pinned by https://github.com/renovatebot/renovate
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -41,6 +68,7 @@ jobs:
       # This is optional, but if you see that your builds are way too big for the runners, you can enable this by uncommenting the following lines:
       - name: Maximize build space
         uses: ublue-os/remove-unwanted-software@5a8b0374222a6fffddb1be9516b5fece9483bed0 # v8
+        if: false
         with:
           remove-codeql: true
 
@@ -83,8 +111,8 @@ jobs:
             io.artifacthub.package.logo-url=${{ env.ARTIFACTHUB_LOGO_URL }}
             io.artifacthub.package.prerelease=false
             containers.bootc=1
-          sep-tags: " "
-          sep-annotations: " "
+#          sep-tags: " "
+#          sep-annotations: " "
 
       # These `if` statements are so that pull requests for your custom images do not make it publish any packages under your name without you knowing
       # They also check if the runner is on the default branch so that things like the merge queue (if you enable it), are going to work
@@ -106,22 +134,19 @@ jobs:
 
       - name: Build Image
         id: build_image
-        uses: redhat-actions/buildah-build@v2
+        uses: docker/build-push-action@v6.13.0
+        env:
+          DOCKER_HOST: ${{ env.DOCKER_HOST }}
         with:
-          containerfiles: |
-            ./Containerfile
+          file: ./Containerfile
           # Postfix image name with -custom to make it a little more descriptive
           # Syntax: https://docs.github.com/en/actions/learn-github-actions/expressions#format
-          image: ${{ env.IMAGE_NAME }}
+          target: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-          oci: false
-          layers: true
-          extra-args: |
-            --cache-from=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
-            --cache-to=${{ steps.registry_case.outputs.lowercase }}/buildah_cache
-            --device=/dev/fuse
-            --cap-add=SYS_ADMIN
+          outputs: type=docker
+      #            --device=/dev/fuse
+      #            --cap-add=SYS_ADMIN
 
       # Rechunk is a script that we use on Universal Blue to make sure there isnt a single huge layer when your image gets published.
       # This does not make your image faster to download, just provides better resumability and fixes a few errors.
