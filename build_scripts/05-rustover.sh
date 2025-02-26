@@ -1,5 +1,8 @@
 #!/usr/bin/env -S bash -euo pipefail
 
+# Skip, simply install with toolbox
+exit 0
+
 on_err() {
 	echo "::warning::Couldnt setup Rustover. Skipping..."
 	exit 0
