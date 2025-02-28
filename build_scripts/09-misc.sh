@@ -7,15 +7,15 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 #dnf5 -y --repo=updates-testing swap podman podman
 #echo "::endgroup::"
 
-{
-	[[ ! -f /.dockerenv ]] && {
-		touch /.dockerenv
-		trap 'rm /.dockerenv' EXIT
-	}
-	mkdir -p /var/home /var/roothome
-	export NONINTERACTIVE=1
-	bash < <(curl -fsSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
-} || echo "::warning::Failed to install: brew"
+#{
+#	[[ ! -f /.dockerenv ]] && {
+#		touch /.dockerenv
+#		trap 'rm /.dockerenv' EXIT
+#	}
+#	mkdir -p /var/home /var/roothome
+#	export NONINTERACTIVE=1
+#	bash < <(curl -fsSL https://raw.githubusercontent.com/Zeglius/packages/refs/heads/brew-script/containerfile_scripts/brew.sh)
+#} || echo "::warning::Failed to install: brew"
 
 {
 	dnf5 install -y --setopt=install_weak_deps=0 podman-machine ||
