@@ -26,3 +26,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	dnf5 install -y "$(curl -s https://api.github.com/repos/Abdenasser/neohtop/releases/latest | jq -r '.assets[].browser_download_url' | grep 'x86_64.rpm')" ||
 		echo "::warning::Failed to install neohtop"
 }
+
+# Lock layering
+{
+	sed -i -e 's|^#LockLayering=false|LockLayering=true|' /etc/rpm-ostreed.conf
+}
