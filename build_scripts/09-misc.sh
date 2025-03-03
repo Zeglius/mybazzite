@@ -31,3 +31,9 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	sed -i -e 's|^#LockLayering=false|LockLayering=true|' /etc/rpm-ostreed.conf
 }
+
+# Restore dnf symlink
+{
+	rm /usr/bin/dnf
+	(cd /usr/bin && ln -s dnf5 dnf)
+}
