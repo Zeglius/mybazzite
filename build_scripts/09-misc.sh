@@ -37,3 +37,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	rm /usr/bin/dnf
 	(cd /usr/bin && ln -s dnf5 dnf)
 }
+
+# Install katsu
+{
+	dnf5 install -y katsu && dnf5 clean all
+}
