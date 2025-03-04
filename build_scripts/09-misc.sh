@@ -42,3 +42,17 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y katsu && dnf5 clean all
 }
+
+# Replace media-automount-generator with media-automount-udev
+{
+	rm -fr /usr/lib/media-automount.d \
+		/usr/lib/systemd/system-generators/media-automount-generator
+	(
+		_tmpdir="$(mktemp -d)"
+		cd "$_tmpdir"
+		git clone --branch=feat/udev --depth=1 https://github.com/Zeglius/media-automount-generator .
+		./install_udev.sh install
+		cd /
+		rm -rf "$_tmpdir"
+	)
+}
