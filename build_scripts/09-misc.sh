@@ -46,4 +46,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 # Install rclone
 {
 	dnf5 install -y rclone
+	ln -s /usr/bin/rclone /sbin/mount.rclone || :
 }
