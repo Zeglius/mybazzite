@@ -40,5 +40,10 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 # Install katsu
 {
-	dnf5 install -y katsu && dnf5 clean all
+	dnf5 install -y katsu
+}
+
+# Install rclone
+{
+	dnf5 install -y rclone
 }
