@@ -56,4 +56,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 		/usr/lib/media-automount.d
 	dnf5 install -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
 		ublue-os-media-automount-udev
+	chmod +x /usr/libexec/is_in_fstab.sh
 }
