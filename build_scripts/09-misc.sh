@@ -48,3 +48,12 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	dnf5 install -y rclone
 	ln -s /usr/bin/rclone /sbin/mount.rclone || :
 }
+
+# Install automounting 
+{
+	rm -rfv \
+		/usr/lib/systemd/system-generators/media-automount-generator \
+		/usr/lib/media-automount.d
+	dnf5 install -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
+		ublue-os-media-automount-udev
+}
