@@ -16,6 +16,7 @@ FROM ghcr.io/ublue-os/bazzite-nvidia:testing as mybazzite
 COPY ./build_scripts/ /tmp/build_scripts/
 
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=bind,src=./packages,dst=/tmp/packages \
     mkdir -p /var/lib/alternatives && \
     /tmp/build_scripts/init && \
     ostree container commit

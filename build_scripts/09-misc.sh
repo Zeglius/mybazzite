@@ -49,12 +49,17 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	ln -s /usr/bin/rclone /sbin/mount.rclone || :
 }
 
-# Install automounting 
+# Remove media-automount-generator  
 {
 	rm -rfv \
 		/usr/lib/systemd/system-generators/media-automount-generator \
 		/usr/lib/media-automount.d
-	dnf5 install -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
-		ublue-os-media-automount-udev
-	chmod +x /usr/libexec/is_in_fstab.sh
+}
+
+# Install drop-in packages
+{
+	for pkg in /tmp/packages/*.rpm; do
+		[[ ! -e $pkg ]] && break
+		dnf5 install -y "$pkg" || echo "::warning::Couldn't install package '$pkg'"
+	done
 }
