@@ -49,14 +49,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	ln -s /usr/bin/rclone /sbin/mount.rclone || :
 }
 
-# Replace media-automount-generator with udev  
-{
-	rm -rfv \
-		/usr/lib/systemd/system-generators/media-automount-generator \
-		/usr/lib/media-automount.d
-	dnf5 -y install ublue-os-media-automount-udev
-}
-
 # Install drop-in packages
 {
 	for pkg in /tmp/packages/*.rpm; do
