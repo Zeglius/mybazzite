@@ -51,13 +51,13 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 # Install windows aero theme
 # See https://gitgud.io/wackyideas/aerothemeplasma
-{
+# {
 
-	git clone https://github.com/winblues/blutiger.git "${tmpdir:=$(mktemp -d)}" &&
-		pushd "$tmpdir/files/scripts"
-	chmod +x ./10-aero-theme.sh && ./10-aero-theme.sh
-	popd && rm -rf "$tmpdir" && unset -v tmpdir
-}
+# 	git clone https://github.com/winblues/blutiger.git "${tmpdir:=$(mktemp -d)}" &&
+# 		pushd "$tmpdir/files/scripts"
+# 	chmod +x ./10-aero-theme.sh && ./10-aero-theme.sh
+# 	popd && rm -rf "$tmpdir" && unset -v tmpdir
+# }
 
 # Install drop-in packages
 {
