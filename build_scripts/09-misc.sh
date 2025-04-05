@@ -66,3 +66,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 		dnf5 install -y "$pkg" || echo "::warning::Couldn't install package '$pkg'"
 	done
 }
+
+# Install kiwi-ng
+{
+	dnf5 install -y kiwi-cli python3-kiwi-stackbuild-plugin
+} || echo "::warning::Couldn't install kiwi tooling"
