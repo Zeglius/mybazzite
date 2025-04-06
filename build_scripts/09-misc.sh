@@ -45,9 +45,10 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 # Install rclone
 {
-	dnf5 install -y rclone
-	ln -s /usr/bin/rclone /sbin/mount.rclone || :
-}
+	dnf5 install -y unzip
+	curl https://rclone.org/install.sh | bash
+	ln -s /usr/bin/rclone /sbin/mount.rclone
+} || echo "::warning::Couldn't install rclone"
 
 # Install windows aero theme
 # See https://gitgud.io/wackyideas/aerothemeplasma
