@@ -13,8 +13,8 @@ jobs:
 
       - name: Trigger build
         env:
-          WOW: ${{ github.ref }}
+          PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -xo pipefail
-          gh pr comment --body "$WOW"
+          gh pr comment $PR --body "wow"
