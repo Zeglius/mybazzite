@@ -11,6 +11,8 @@ alias build-vm := build-qcow2
 alias rebuild-vm := rebuild-qcow2
 alias run-vm := run-vm-qcow2
 
+a := ''
+
 [private]
 default:
     @just --list
