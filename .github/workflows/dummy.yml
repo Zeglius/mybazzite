@@ -14,6 +14,7 @@ jobs:
       - name: Trigger build
         env:
           WOW: ${{ github.ref }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -xo pipefail
           gh pr comment --body "$WOW"
