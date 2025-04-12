@@ -8,13 +8,13 @@ on:
 jobs:
   changed_files:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
       - name: Trigger build
         env:
           PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -xo pipefail
-          gh pr comment $PR --body "wow"
+          gh pr comment "$PR" --body "wow"
