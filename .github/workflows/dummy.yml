@@ -15,6 +15,7 @@ jobs:
         env:
           PR: ${{ github.event.pull_request.number }}
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -xo pipefail
-          gh pr comment "$PR" --body "wow"
+          gh pr comment --repo "$GH_REPO" "$PR" --body "wow"
