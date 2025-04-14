@@ -5,11 +5,17 @@ jobs:
     output-name: ghcr.io/zeglius/mybazzite
     output-tags:
       - latest
-      - "{{ nowTag }}"
+      - "{{- nowTag -}}"
     build-args:
       - BASE_IMAGE=ghcr.io/ublue-os/bazzite-nvidia:latest
-    annotations:
+      - gh_repo=https://github.com/Zeglius/mybazzite
+      - repo_owner=Zeglius
+      - created_compact={{- nowTag -}}
+    labels:
       - io.artifacthub.package.keywords=bootc,ublue,universal-blue
-      - org.opencontainers.image.title={{.OutputName}}
-      - org.opencontainers.image.url=https://github.com/Zeglius/mybazzite
       - io.artifacthub.package.license=Apache-2.0
+      - org.opencontainers.image.title={{- .OutputName -}}
+      - org.opencontainers.image.source={{- .BuildArgs | readKeyVal "gh_repo" -}}/blob/main/{{- .Containerfile -}}
+      - org.opencontainers.image.url={{- .BuildArgs | readKeyVal "gh_repo" -}}
+      - org.opencontainers.image.version={{- .BuildArgs | readKeyVal "created_compact" -}}
+      - org.opencontainers.image.vendor={{- .BuildArgs | readKeyVal "repo_owner" -}}
