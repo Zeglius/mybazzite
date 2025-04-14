@@ -1,17 +1,17 @@
 ---
 name: Build Custom Image
 on:
-  pull_request:
-    branches:
-      - main
-  # schedule:
-  #   - cron: '05 10 * * *'  # 10:05am UTC everyday
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - "**/README.md"
-  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - main
+  # # schedule:
+  # #   - cron: '05 10 * * *'  # 10:05am UTC everyday
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - "**/README.md"
+  # workflow_dispatch:
 
 env:
   IMAGE_NAME: "${{ github.event.repository.name }}" # the name of the image produced by this build, matches repo names

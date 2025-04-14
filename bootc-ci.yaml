@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=./bootc-ci.schema.json
+jobs:
+  - &base
+    containerfile: Containerfile
+    output-name: ghcr.io/zeglius/mybazzite
+    output-tags:
+      - latest
+      - "{{ now }}"
+    build-args:
+      - BASE_IMAGE=ghcr.io/ublue-os/bazzite-nvidia:latest
+    annotations:
+      - io.artifacthub.package.keywords=bootc,ublue,universal-blue
+      - org.opencontainers.image.title={{.OutputName}}
+      - org.opencontainers.image.url=https://github.com/Zeglius/mybazzite
+      - io.artifacthub.package.license=Apache-2.0
