@@ -1,4 +1,5 @@
-FROM ghcr.io/ublue-os/bazzite-nvidia:testing as mybazzite
+ARG BASE_IMAGE=${BASE_IMAGE:-ghcr.io/ublue-os/bazzite-nvidia:testing}
+FROM ${BASE_IMAGE} as mybazzite
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:stable
