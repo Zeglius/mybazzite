@@ -1,21 +1,21 @@
 # yaml-language-server: $schema=./bootc-ci.schema.json
+# {{ $owner := "Zeglius" }}
+# {{ $image_name := "mybazzite" }}
+# {{ $repo := printf "https://github.com/%s/%s" $owner $image_name }}
+
 jobs:
-  - &base
-    containerfile: Containerfile
-    output-name: ghcr.io/zeglius/mybazzite
+  - containerfile: '{{ block "containerfile" . }}Containerfile{{ end }}'
+    output-name: '{{ block "output_name" . }}ghcr.io/zeglius/mybazzite{{ end }}'
     output-tags:
       - latest
-      - "{{- nowTag -}}"
+      - "{{ nowTag }}"
     build-args:
-      - BASE_IMAGE=ghcr.io/ublue-os/bazzite-nvidia:latest
-      - gh_repo=https://github.com/Zeglius/mybazzite
-      - repo_owner=Zeglius
-      - created_compact={{- nowTag -}}
+      BASE_IMAGE: ghcr.io/ublue-os/bazzite-nvidia:latest
     labels:
-      - io.artifacthub.package.keywords=bootc,ublue,universal-blue
-      - io.artifacthub.package.license=Apache-2.0
-      - org.opencontainers.image.title={{- .OutputName -}}
-      - org.opencontainers.image.source={{- .BuildArgs | readKeyVal "gh_repo" -}}/blob/main/{{- .Containerfile -}}
-      - org.opencontainers.image.url={{- .BuildArgs | readKeyVal "gh_repo" -}}
-      - org.opencontainers.image.version={{- .BuildArgs | readKeyVal "created_compact" -}}
-      - org.opencontainers.image.vendor={{- .BuildArgs | readKeyVal "repo_owner" -}}
+      io.artifacthub.package.keywords: bootc,ublue,universal-blue
+      io.artifacthub.package.license: Apache-2.0
+      org.opencontainers.image.title: '{{ template "output_name" . }}'
+      org.opencontainers.image.source: '{{ $repo -}}/blob/main/{{- template "containerfile" . }}'
+      org.opencontainers.image.url: "{{ $repo }}"
+      org.opencontainers.image.version: "{{ nowTag }}"
+      org.opencontainers.image.vendor: "{{ $owner }}"
