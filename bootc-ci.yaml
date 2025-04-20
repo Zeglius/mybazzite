@@ -1,22 +1,37 @@
 # yaml-language-server: $schema=./bootc-ci.schema.json
+# {{ $secrets := default (dict) .secrets }}
+
+# {{/* This block is for common inputs, like owner and image name */}}
 # {{ $owner := "Zeglius" }}
 # {{ $image_name := "mybazzite" }}
+# {{ $major_version := default "42" $secrets.MAJOR_VERSION }}
+
 # {{ $repo := printf "https://github.com/%s/%s" $owner $image_name }}
 # {{ $now := nowTag }}
 
 jobs:
+  # {{ $output_name := printf "ghcr.io/%s/%s" (lower $owner) $image_name }}
+  # {{ $image_base := printf "ghcr.io/ublue-os/bazzite-nvidia:%s" $major_version }}
   - containerfile: "Containerfile"
-    # {{ $output_name := printf "ghcr.io/%s/%s" (lower $owner) $image_name }}
     output-name: "{{ $output_name }}"
 
     build-args:
-      # {{ $image_base := "ghcr.io/ublue-os/bazzite-nvidia:latest" }}
       BASE_IMAGE: "{{ $image_base }}"
 
-    # {{ $osInfo := $image_base | osRelease }}
+    # {{ $osInfo := dict }}
+    # {{/* Check if major version is defined */}}
+    # {{ if $major_version }}
+    #   {{/* If it is defined, use it... */}}
+    #   {{ $osInfo = dict "VERSION_ID" $major_version }}
+    # {{ else }}
+    #   {{/* ... otherwise, we fetch the image base, and parse from os-release */}}
+    #   {{ $osInfo = $image_base | osRelease }}
+    # {{ end }}
     output-tags:
+      - latest
       - "{{ $now }}"
       - "{{ $osInfo.VERSION_ID }}"
+
       # {{ range $_, $tag := (slice "latest" "stable") }}
       - "{{ $tag }}"
       - "{{ $tag }}-{{ $osInfo.VERSION_ID }}"
@@ -24,8 +39,11 @@ jobs:
       - "{{ $osInfo.VERSION_ID }}.{{ $now }}"
       - "{{ $tag }}-{{ $osInfo.VERSION_ID }}"
       - "{{ $tag }}-{{ $osInfo.VERSION_ID }}.{{ $now }}"
-      # {{ else }}
-      - latest
+      # {{ end }}
+
+      # {{/* Add commit sha if available */}}
+      # {{ with $secrets.GITHUB_SHA }}
+      - "{{ . }}"
       # {{ end }}
 
     labels:
