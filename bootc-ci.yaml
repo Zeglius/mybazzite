@@ -2,20 +2,37 @@
 # {{ $owner := "Zeglius" }}
 # {{ $image_name := "mybazzite" }}
 # {{ $repo := printf "https://github.com/%s/%s" $owner $image_name }}
+# {{ $now := nowTag }}
 
 jobs:
-  - containerfile: '{{ block "containerfile" . }}Containerfile{{ end }}'
-    output-name: '{{ block "output_name" . }}ghcr.io/zeglius/mybazzite{{ end }}'
-    output-tags:
-      - latest
-      - "{{ nowTag }}"
+  - containerfile: "Containerfile"
+    # {{ $output_name := printf "ghcr.io/%s/%s" (lower $owner) $image_name }}
+    output-name: "{{ $output_name }}"
+
     build-args:
-      BASE_IMAGE: ghcr.io/ublue-os/bazzite-nvidia:latest
+      # {{ $image_base := "ghcr.io/ublue-os/bazzite-nvidia:latest" }}
+      BASE_IMAGE: "{{ $image_base }}"
+
+    # {{ $osInfo := $image_base | osRelease }}
+    output-tags:
+      - "{{ $now }}"
+      - "{{ $osInfo.VERSION_ID }}"
+      # {{ range $_, $tag := (slice "latest" "stable") }}
+      - "{{ $tag }}"
+      - "{{ $tag }}-{{ $osInfo.VERSION_ID }}"
+      - "{{ $osInfo.VERSION_ID }}-{{ $tag }}"
+      - "{{ $osInfo.VERSION_ID }}.{{ $now }}"
+      - "{{ $tag }}-{{ $osInfo.VERSION_ID }}"
+      - "{{ $tag }}-{{ $osInfo.VERSION_ID }}.{{ $now }}"
+      # {{ else }}
+      - latest
+      # {{ end }}
+
     labels:
       io.artifacthub.package.keywords: bootc,ublue,universal-blue
       io.artifacthub.package.license: Apache-2.0
-      org.opencontainers.image.title: '{{ template "output_name" . }}'
-      org.opencontainers.image.source: '{{ $repo -}}/blob/main/{{- template "containerfile" . }}'
+      org.opencontainers.image.title: "{{ $output_name }}"
+      org.opencontainers.image.source: "{{ $repo }}/blob/main/Containerfile"
       org.opencontainers.image.url: "{{ $repo }}"
-      org.opencontainers.image.version: "{{ nowTag }}"
+      org.opencontainers.image.version: "{{ $now }}"
       org.opencontainers.image.vendor: "{{ $owner }}"
