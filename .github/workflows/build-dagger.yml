@@ -31,7 +31,7 @@ jobs:
           version: "latest"
           module: github.com/Zeglius/bootc-dagger/ci@main
           verb: call
-          args: new-builder --cfg-file=./bootc-ci.yaml --build-context=. --secrets=env://GITHUB_SHA build
+          args: new-builder ${{ github.event_name == 'pull_request' && ' --dry-run' }} --cfg-file=./bootc-ci.yaml --build-context=. --secrets=env://GITHUB_SHA,env://GITHUB_REPOSITORY,env://CI,env://GITHUB_REPOSITORY_OWNER,env://GITHUB_REF_NAME build
           # assumes the Dagger Cloud token is in
           # a repository secret named DAGGER_CLOUD_TOKEN
           # set via the GitHub UI/CLI
