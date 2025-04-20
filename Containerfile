@@ -18,8 +18,9 @@ COPY ./build_scripts/ /tmp/build_scripts/
 
 RUN --mount=type=cache,dst=/var/cache/libdnf5 \
     mkdir -p /var/lib/alternatives && \
-    /tmp/build_scripts/init && \
-    ostree container commit
+    /tmp/build_scripts/init
+
+COPY ./system_files/ /
 
 # Cosmic env
 FROM mybazzite as mybazzite-cosmic
