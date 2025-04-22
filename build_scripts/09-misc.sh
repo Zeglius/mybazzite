@@ -72,3 +72,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y kiwi-cli python3-kiwi-stackbuild-plugin
 } || echo "::warning::Couldn't install kiwi tooling"
+
+# Install netcat (necesary for zed)
+{
+	dnf5 install -y netcat
+} || echo "::warning::Couldn't install netcat"
