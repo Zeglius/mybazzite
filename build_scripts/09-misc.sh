@@ -77,13 +77,3 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y netcat
 } || echo "::warning::Couldn't install netcat"
-
-# test skip_if_unavailable
-{
-	sed -i 's|fyralabs|fyrolabs|g' /etc/yum.repos.d/terra.repo
-	dnf5 config-manager setopt "terra*".skip_if_unavailable=1
-	rpm-ostree update mesa-dri-drivers
-} || echo "::error::Couldn't skip faulty repo check"
-
-# ensure we dont upload image if managed to build
-exit 1
