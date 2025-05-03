@@ -30,6 +30,7 @@ jobs:
         with:
           version: "latest"
           module: github.com/Zeglius/bootc-dagger/ci@main
+          dagger-flags: --silent
           verb: call
           args: >-
             new-builder
