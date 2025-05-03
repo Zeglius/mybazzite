@@ -16,7 +16,7 @@ FROM ${BASE_IMAGE} as mybazzite
 
 COPY ./build_scripts/ /tmp/build_scripts/
 
-RUN --mount=type=cache,dst=/var/cache/libdnf5 \
+RUN --mount=type=cache,dst=/var/cache \
     mkdir -p /var/lib/alternatives && \
     /tmp/build_scripts/init
 
@@ -25,7 +25,7 @@ COPY ./system_files/ /
 # Cosmic env
 FROM mybazzite as mybazzite-cosmic
 
-RUN --mount=type=cache,dst=/var/cache/libdnf5 \
+RUN --mount=type=cache,dst=/var/cache \
     dnf5 -y copr enable ryanabx/cosmic-epoch && \
     dnf5 -y install cosmic-desktop && \
     dnf5 -y copr disable ryanabx/cosmic-epoch && \
