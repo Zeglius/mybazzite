@@ -38,11 +38,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	(cd /usr/bin && ln -s dnf5 dnf)
 }
 
-# Install katsu
-{
-	dnf5 install -y katsu
-}
-
 # Install rclone
 {
 	dnf5 install -y unzip
@@ -67,8 +62,3 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 		dnf5 install -y "$pkg" || echo "::warning::Couldn't install package '$pkg'"
 	done
 }
-
-# Install kiwi-ng
-{
-	dnf5 install -y kiwi-cli python3-kiwi-stackbuild-plugin
-} || echo "::warning::Couldn't install kiwi tooling"
