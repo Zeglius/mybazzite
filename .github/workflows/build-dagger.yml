@@ -38,7 +38,6 @@ jobs:
             --build-context=.
             --secrets=env://GITHUB_SHA,env://GITHUB_REPOSITORY,env://CI,env://GITHUB_REPOSITORY_OWNER,env://GITHUB_REF_NAME
             build
-            --timeout "20m"
           # assumes the Dagger Cloud token is in
           # a repository secret named DAGGER_CLOUD_TOKEN
           # set via the GitHub UI/CLI
