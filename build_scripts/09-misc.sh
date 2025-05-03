@@ -62,3 +62,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 		dnf5 install -y "$pkg" || echo "::warning::Couldn't install package '$pkg'"
 	done
 }
+
+# Install gnome disks
+{
+	dnf5 -y swap kde-partitionmanager gnome-disk-utility
+}
