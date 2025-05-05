@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Retag image
+
+permissions:
+  packages: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_ref:
+        description: |-
+          Image reference to retag.
+          Example:
+            ghcr.io/<owner>/<repo>/<image>:<tag>
+            # Or
+            ghcr.io/<owner>/<repo>/<image>@sha256:<digest>
+        required: true
+
+      final_tags:
+        required: true
+        description: |-
+          List of tags to retag the image to. Separated by spaces.
+          Example: <tag1> <tag2>
+          Default: latest stable
+        default: "latest stable"
+
+jobs:
+  retag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Retag image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: .github/workflows/retag.sh ${{ inputs.image_ref }} ${{ inputs.final_tags }}
