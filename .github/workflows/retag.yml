@@ -21,13 +21,20 @@ on:
         description: |-
           List of tags to retag the image to. Separated by spaces.
           Example: <tag1> <tag2>
-          Default: latest stable
         default: "latest stable"
 
 jobs:
   retag:
     runs-on: ubuntu-latest
     steps:
+      - name: Safeguard wait
+        env:
+          SLEEP_TIME: "30"
+        run: |
+          echo "Triggered safeguard."
+          echo "You have $SLEEP_TIME seconds to cancel the workflow if you want to cancel retagging."
+          sleep $SLEEP_TIME
+
       - name: Checkout code
         uses: actions/checkout@v4
 
