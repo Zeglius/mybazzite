@@ -1,10 +1,6 @@
 #!/bin/bash
 # Usage: ./retag.sh <input_image_ref> <tag> [<tag>...]
 
-# mask the token
-set +x
-echo "::add-mask::${GITHUB_TOKEN:?Missing GITHUB_TOKEN}"
-
 set -euxo pipefail
 
 # Error handling with GitHub Actions compatible error output
@@ -47,6 +43,12 @@ done
 echo "${GITHUB_TOKEN}" | sudo skopeo login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 
 # Copy the input image to each of the final image references
+echo "# Image retaggins" >>"${GITHUB_STEP_SUMMARY}"
 for _ref in "${final_refs[@]}"; do
-    sudo skopeo copy docker://"$INPUT_REF" docker://"$_ref"
+    sudo skopeo copy docker://"$INPUT_REF" docker://"$_ref" &&
+        {
+            echo '```'
+            echo "$INPUT_REF -> $_ref"
+            echo '```'
+        } >>"${GITHUB_STEP_SUMMARY}"
 done
