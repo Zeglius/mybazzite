@@ -1,5 +1,12 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+# WARNING: This workflow is meant for emergency use only.
+# Under NO CIRCUMSTANCES should this workflow be automatically triggered.
 name: Retag image
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 permissions:
   packages: write
@@ -17,14 +24,14 @@ on:
         required: true
 
       final_tags:
-        required: true
         description: |-
           List of tags to retag the image to. Separated by spaces.
           Example: <tag1> <tag2>
+        required: true
         default: "latest stable"
 
 jobs:
-  retag:
+  retag-image:
     runs-on: ubuntu-latest
     steps:
       - name: Safeguard wait
