@@ -22,8 +22,6 @@ on:
             # Or
             ghcr.io/<owner>/<repo>/<image>@sha256:<digest>
         required: true
-        default: >-
-          ghcr.io/zeglius/mybazzite:latest
 
       final_tags:
         description: |-
@@ -44,7 +42,11 @@ jobs:
           echo "You have $SLEEP_TIME seconds to cancel the workflow if you want to cancel retagging."
           sleep $SLEEP_TIME
 
-      - uses: Zeglius/ghcr-oci-retagger@main
-        with:
-          image_refs: ${{ inputs.image_ref }}
-          final_tags: ${{ inputs.final_tags }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Retag image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: .github/workflows/retag.sh ${{ inputs.image_ref }} ${{ inputs.final_tags }}
