@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: "Debug github event"
+
+on:
+  push:
+  # registry_package: # registry_package doesnt work because its a webhook at organization level, no repo
+  #   types: [published, updated]
+
+jobs:
+  debug-event:
+    name: Debug event
+    runs-on: "ubuntu-latest"
+    steps:
+      - id: write-summary
+        env:
+          EVENT: ${{ toJSON(github.event) }}
+        run: |
+          set -euo pipefail
+          {
+            echo '# Debug `github.event.'$GITHUB_EVENT_NAME'`'
+            echo '```'
+            echo "$EVENT" | jq
+            echo '```'
+          } > $GITHUB_STEP_SUMMARY
