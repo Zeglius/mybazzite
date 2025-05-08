@@ -11,30 +11,26 @@ concurrency:
 permissions:
   packages: write
 
-env:
-  IMAGES_TO_RETAG: >-
-    ghcr.io/zeglius/mybazzite:latest
-
 on:
   workflow_dispatch:
     inputs:
-      INPUT_TAG:
-        description: Image tag to convert from
-        required: true
-        default: latest
-      OUTPUT_TAGS:
-        description: Image tag to convert into
-        required: true
-        default: latest
+      old_tag:
+        description: "Old tag from which its image will be retagged to latest"
+        required: false
 
 jobs:
   retag-image:
     runs-on: ubuntu-latest
-    env:
-      INPUT_TAG: ${{ inputs.INPUT_TAG }}
-      OUTPUT_TAGS: ${{ inputs.OUTPUT_TAGS }}
-
     steps:
+      - uses: actions/checkout@v4
+
+      - id: fetch_old_sha
+        name: Fetch previous commit image tag
+        run: |
+          set -euo pipefail
+          old_sha="$(git log --pretty="format:%H" -1 -- Containerfile build_scripts/ bootc-ci.*)"
+          echo "old_sha=$old_sha" | tee --append $GITHUB_ENV
+
       - name: Safeguard wait
         env:
           SLEEP_TIME: "30"
@@ -43,12 +39,8 @@ jobs:
           echo "You have $SLEEP_TIME seconds to cancel the workflow if you want to cancel retagging."
           sleep $SLEEP_TIME
 
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Retag image
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTOR: ${{ github.actor }}
-
-        run: .github/workflows/retag.sh
+      - uses: Zeglius/ghcr-oci-retagger@main
+        with:
+          PREFIX: ghcr.io/zeglius/
+          TAG_MAPPINGS: >-
+            mybazzite:${{ inputs.old_tag != '' && inputs.old_tag || env.old_sha }} => mybazzite:latest
