@@ -11,28 +11,29 @@ concurrency:
 permissions:
   packages: write
 
+env:
+  IMAGES_TO_RETAG: >-
+    ghcr.io/zeglius/mybazzite:latest
+
 on:
   workflow_dispatch:
     inputs:
-      image_ref:
-        description: |-
-          Image reference to retag.
-          Example:
-            ghcr.io/<owner>/<repo>/<image>:<tag>
-            # Or
-            ghcr.io/<owner>/<repo>/<image>@sha256:<digest>
+      INPUT_TAG:
+        description: Image tag to convert from
         required: true
-
-      final_tags:
-        description: |-
-          List of tags to retag the image to. Separated by spaces.
-          Example: <tag1> <tag2>
+        default: latest
+      OUTPUT_TAGS:
+        description: Image tag to convert into
         required: true
-        default: "latest stable"
+        default: latest
 
 jobs:
   retag-image:
     runs-on: ubuntu-latest
+    env:
+      INPUT_TAG: ${{ inputs.INPUT_TAG }}
+      OUTPUT_TAGS: ${{ inputs.OUTPUT_TAGS }}
+
     steps:
       - name: Safeguard wait
         env:
@@ -49,4 +50,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
-        run: .github/workflows/retag.sh ${{ inputs.image_ref }} ${{ inputs.final_tags }}
+
+        run: .github/workflows/retag.sh

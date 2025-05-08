@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ./retag.sh <input_image_ref> <tag> [<tag>...]
+# Usage: IMAGES_TO_RETAG="ghcr.io/ublue-os/IMAGE1" INPUT_TAG="41.20250421" OUTPUT_TAGS="latest" ./retag.sh
 
 set -euxo pipefail
 
@@ -7,48 +7,53 @@ set -euxo pipefail
 trap 'echo "::error file=${0},line=${LINENO}::Something went wrong"' ERR
 
 if [[ " $* " == @(-h|--help) ]]; then
-    echo "Usage: ./${0##*/} <input_image_ref> <tag> [<tag>...]"
+    echo "Usage: IMAGES_TO_RETAG=\"ghcr.io/ublue-os/IMAGE1\" INPUT_TAG=\"41.20250421\" OUTPUT_TAGS=\"latest\" FINAL_LATS ./${0##*/}"
     exit 0
 fi
 
-unset -v INPUT_REF
-unset -v FINAL_TAGS
-INPUT_REF=$1
-FINAL_TAGS=("${@:2}")
-declare -p INPUT_REF
-declare -p FINAL_TAGS
+# Initialize a string, containing pairs of <input_tag> and <output_tag>,
+# separated by newlines.
+skopeo_params=""
 
-# Initialize an empty array to store the final image references
-declare -a final_refs
-
-# Process each tag and build the complete image reference
-for tag in "${FINAL_TAGS[@]}"; do
-    # Strip any existing tags or digests from the image reference and append the new tag
-    _img="${INPUT_REF}"
-    _img="${_img%%:*}"
-    _img="${_img%%@*}"
-    final_refs+=("${_img}:$tag")
+for _src_img in $IMAGES_TO_RETAG; do
+    for _tag in $OUTPUT_TAGS; do
+        # Strip any existing tags or digests from the image reference and append the new tag
+        _img="${INPUT_REF}"
+        _img="${_img%%:*}"
+        _img="${_img%%@*}"
+        skopeo_params+="${_src_img}:${INPUT_TAG} ${_img}:${_tag}"
+        skopeo_params+=$'\n'
+    done
 done
 
-# Check each final ref is valid
-declare -p final_refs
-for _ref in "${final_refs[@]}"; do
-    if [[ $(grep -o ':' <<<"$_ref" | wc -l) -ne 1 ]]; then
-        echo "::error::Invalid image reference: $_ref"
-        exit 1
-    fi
-done
+declare -p skopeo_params
+
+summary_log=""
 
 # Login into Github Container Registry in skopeo
 echo "${GITHUB_TOKEN}" | sudo skopeo login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 
+while read -r _src_img _dst_img; do
+    # Check each img is valid
+    for _img in $_src_img $_dst_img; do
+        if [[ $(grep -o ':' <<<"$_img" | wc -l) -ne 1 ]]; then
+            echo "::error::Invalid image reference: $_img"
+            exit 1
+        fi
+    done
+
+    if sudo skopeo copy docker://"$_src_img" docker://"$_dst_img"; then
+        summary_log+="$_src_img -> $_dst_img"
+        summary_log+=$'\n'
+    fi
+done <<<"$skopeo_params"
+
 # Copy the input image to each of the final image references
 echo "# Image retaggins" >>"${GITHUB_STEP_SUMMARY}"
-for _ref in "${final_refs[@]}"; do
-    sudo skopeo copy docker://"$INPUT_REF" docker://"$_ref" &&
-        {
-            echo '```'
-            echo "$INPUT_REF -> $_ref"
-            echo '```'
-        } >>"${GITHUB_STEP_SUMMARY}"
-done
+while read -r _line; do
+    {
+        echo '```'
+        echo "$_line"
+        echo '```'
+    } >>"${GITHUB_STEP_SUMMARY}"
+done <<<"$summary_log"
