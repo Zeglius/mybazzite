@@ -41,6 +41,7 @@ jobs:
 
       - uses: Zeglius/ghcr-oci-retagger@main
         with:
+          GITHUB_TOKEN: ${{ github.token }}
           PREFIX: ghcr.io/zeglius/
           TAG_MAPPINGS: |-
             mybazzite:${{ inputs.old_tag != '' && inputs.old_tag || env.old_sha }} => mybazzite:latest,stable
