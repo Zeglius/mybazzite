@@ -67,3 +67,9 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 -y swap kde-partitionmanager gnome-disk-utility
 }
+
+# Replace tuned with power-profiles-daemon
+{
+	dnf5 -y remove "tuned*" &&
+		dnf5 -y install power-profiles-daemon tlp
+} || echo "::warning::Couldn't replace tuned with power-profiles-daemon"
