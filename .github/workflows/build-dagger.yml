@@ -33,6 +33,11 @@ jobs:
           remove-cached-tools: true
           remove-swapfile: true
 
+      - name: Mount BTRFS for docker storage
+        env:
+          BTRFS_TARGET_DIR: "/var/lib/docker"
+        run: ${{ github.workspace }}/.github/workflows/mount_btrfs.sh
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
