@@ -3,6 +3,8 @@
 set -eo pipefail
 
 BTRFS_TARGET_DIR=${BTRFS_TARGET_DIR:?}
+# Options used to mount
+BTRFS_MOUNT_OPTS=${BTRFS_MOUNT_OPTS:-"compress-force=zstd:1"}
 # Location where the loopback file will be placed.
 _BTRFS_LOOPBACK_FILE=${_BTRFS_LOOPBACK_FILE:-/mnt/btrfs_loopbacks/$(systemd-escape -p "$BTRFS_TARGET_DIR")}
 # Percentage of the total space to use. Max: 1.0, Min: 0.0
@@ -32,7 +34,7 @@ sudo mkfs.btrfs -r "$BTRFS_TARGET_DIR" "$_BTRFS_LOOPBACK_FILE"
 
 # Mount
 sudo systemd-mount "$_BTRFS_LOOPBACK_FILE" "$BTRFS_TARGET_DIR" \
-    --options=compress-force=zstd:1
+    ${BTRFS_MOUNT_OPTS:+ --options="${BTRFS_MOUNT_OPTS}"}
 
 # Restart docker services
 sudo systemctl start docker
