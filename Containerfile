@@ -15,7 +15,6 @@ FROM ${BASE_IMAGE} as mybazzite
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
 COPY ./build_scripts/ /tmp/build_scripts/
-COPY ./packages/* /tmp/packages/
 
 RUN --mount=type=cache,dst=/var/cache \
     mkdir -p /var/lib/alternatives && \

@@ -76,5 +76,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 
 # test new automount
 {
-	systemctl enable ublue-os-media-automount.service || :
+	dnf5 -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
+		update ublue-os-media-automount-udev
 }
