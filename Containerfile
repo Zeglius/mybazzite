@@ -17,8 +17,9 @@ FROM ${BASE_IMAGE} as mybazzite
 COPY ./build_scripts/ /tmp/build_scripts/
 
 RUN --mount=type=cache,dst=/var/cache \
-    mkdir -p /var/lib/alternatives && \
-    /tmp/build_scripts/init
+    mkdir -p /var/lib/alternatives \
+    && dnf5 -y update uupd \
+    && /tmp/build_scripts/init
 
 COPY ./system_files/ /
 
