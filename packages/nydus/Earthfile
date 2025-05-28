@@ -1,0 +1,20 @@
+VERSION 0.8
+
+build:
+    FROM docker.io/library/golang
+    ARG version="v2.3.1"
+    WORKDIR /work
+        GIT CLONE https://github.com/containers/nydus-storage-plugin.git nydus-storage-plugin
+    RUN mkdir -p /out/usr/bin /out/etc \
+        && cd nydus-storage-plugin \
+        && make \
+        && cp bin/nydus-store /out/usr/bin \
+        && cp misc/nydus-config.json /out/etc/nydus-config.json
+    RUN wget -nv -O- \
+        "https://github.com/dragonflyoss/nydus/releases/download/${version}/nydus-static-${version}-linux-amd64.tgz" \
+        | tar -xz \
+        && mv nydus-static/nydus-image /out/usr/bin/nydus-image \
+        && mv nydus-static/nydusd /out/usr/bin/nydusd
+    COPY ./nydus-posthook.sh /out/run/.posthooks/nydus-posthook.sh
+    SAVE ARTIFACT /out
+
