@@ -12,6 +12,10 @@ INSTALL_PACKAGES:
     FUNCTION
     COPY ./packages/ananicy-cpp+build/out/. /
     COPY ./packages/ananicy-rules+build/out/. /
+    COPY ./packages/nydus+build/out/. /
+    # Run hooks
+    RUN find /run/.posthooks -type f -name "*.sh" -print -executable -exec {} \; -exec rm {} \;
+    RUN rm -rf /run/.posthooks
 
 build:
     ARG BASE_IMAGE=${BASE_BOOTC_IMAGE}
