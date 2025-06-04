@@ -1,4 +1,4 @@
 # Enable zstd compression in rootfs.
 # See:
 #   - https://bootc-dev.github.io/bootc/building/kernel-arguments.html#usrlibbootckargsd
-kargs = ["rootflags=subvol=root,compress-force=zstd:1"]
+kargs = ["rootflags=subvol=root,compress-force=zstd:1,x-gvfs-hide"]
