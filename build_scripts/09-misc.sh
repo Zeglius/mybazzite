@@ -63,11 +63,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	done
 }
 
-# Install gnome disks
-{
-	dnf5 -y swap kde-partitionmanager gnome-disk-utility
-}
-
 # Replace tuned with power-profiles-daemon
 {
 	dnf5 -y remove "tuned*" &&
