@@ -63,12 +63,6 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	done
 }
 
-# Replace tuned with power-profiles-daemon
-{
-	dnf5 -y remove "tuned*" &&
-		dnf5 -y install power-profiles-daemon tlp
-} || echo "::warning::Couldn't replace tuned with power-profiles-daemon"
-
 # test new automount
 {
 	dnf5 -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
