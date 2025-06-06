@@ -68,3 +68,9 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	dnf5 -y --enable-repo=copr:copr.fedorainfracloud.org:ublue-os:packages \
 		update ublue-os-media-automount-udev
 }
+
+# Use iwd
+# See https://github.com/ublue-os/bazzite/commit/d504a67a98893defd96f3026cf697274cb59fe54
+{
+	dnf5 install -y iwd
+} || echo "::warning::Couldn't install iwd"
