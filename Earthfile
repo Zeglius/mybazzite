@@ -11,6 +11,7 @@ RUN apk add \
 INSTALL_PACKAGES:
     FUNCTION
     COPY ./packages/ananicy-cpp+build/out/. /
+    COPY ./packages/ananicy-rules+build/out/. /
 
 build:
     ARG BASE_IMAGE=${BASE_BOOTC_IMAGE}
