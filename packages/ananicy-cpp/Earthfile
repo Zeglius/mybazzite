@@ -1,0 +1,17 @@
+VERSION 0.8
+
+build:
+    FROM fedora:42
+    RUN dnf -y install \
+        git cmake g++ systemd systemd-devel zlib-devel bpftool llvm clang \
+        && dnf -y clean all
+    GIT CLONE https://gitlab.com/ananicy-cpp/ananicy-cpp.git /work
+    WORKDIR /work
+    RUN cmake -B build \
+        -DCMAKE_RELEASE_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -S .
+    RUN cmake --build build --target ananicy-cpp
+    RUN mkdir -p /out/usr && cmake --install build --prefix=/out/usr --component Runtime
+    RUN systemctl enable --root=/out ananicy-cpp.service
+    SAVE ARTIFACT /out
