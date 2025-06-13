@@ -1,9 +1,9 @@
 VERSION 0.8
 
 build:
-    FROM fedora:42
+    FROM ../+base
     RUN dnf -y install \
-        git cmake g++ systemd systemd-devel zlib-devel bpftool llvm clang \
+        git cmake g++ systemd-devel zlib-devel bpftool llvm clang \
         && dnf -y clean all
     GIT CLONE https://gitlab.com/ananicy-cpp/ananicy-cpp.git /work
     WORKDIR /work

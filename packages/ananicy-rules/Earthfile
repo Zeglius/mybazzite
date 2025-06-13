@@ -1,9 +1,8 @@
 VERSION 0.8
 
 build:
-    FROM fedora:42
+    FROM ../+base
     GIT CLONE https://github.com/CachyOS/ananicy-rules.git /work
-    RUN dnf -y install systemd && dnf -y clean all
     WORKDIR /work
     RUN mkdir -p /out/etc/ananicy.d \
         && cp -r ./* /out/etc/ananicy.d/
