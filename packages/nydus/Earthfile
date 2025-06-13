@@ -13,8 +13,7 @@ build:
     RUN wget -nv -O- \
         "https://github.com/dragonflyoss/nydus/releases/download/${version}/nydus-static-${version}-linux-amd64.tgz" \
         | tar -xz \
-        && mv nydus-static/nydus-image /out/usr/bin/nydus-image \
-        && mv nydus-static/nydusd /out/usr/bin/nydusd
+        && cd nydus-static \
+        && install -D -m 755 nydusd nydus-image nydusify nydusctl nydus-overlayfs /out/usr/bin
     COPY ./nydus-posthook.sh /out/run/.posthooks/nydus-posthook.sh
     SAVE ARTIFACT /out
-
