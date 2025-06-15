@@ -8,6 +8,10 @@ RUN apk add \
     git sed coreutils \
     || :
 
+COPY ./. ./
+ARG --global branch=$(git branch --show-current)
+ARG --global commit_hash=$(git rev-parse --short HEAD)
+
 INSTALL_PACKAGES:
     FUNCTION
     COPY ./packages/ananicy-cpp+build/out/. /
@@ -30,16 +34,21 @@ build:
 SAVE_IMAGE:
     FUNCTION
     ARG img_name
-    ARG default_tag="latest"
+    ARG default_tag=$(echo $branch | sed -E 's/(main|master)/latest/')
     LET build_date = $(date +%Y%m%d)
     LET major_ver = $(lsb_release -rs || :)
-
-    SAVE IMAGE --push $img_name:$default_tag               # by tag
-    SAVE IMAGE --push $img_name:$build_date                # by build date
-    SAVE IMAGE --push $img_name:$major_ver                 # major_ver
-    SAVE IMAGE --push $img_name:$major_ver-$default_tag    # major_ver + tag
-    SAVE IMAGE --push $img_name:$major_ver.$build_date     # major_ver + date
+    LET tags = ${img_name:?}:$default_tag \
+                ${img_name:?}:$build_date \
+                ${img_name:?}:$major_ver \
+                ${img_name:?}:$major_ver-$default_tag \
+                ${img_name:?}:$major_ver.$build_date \
+                ${img_name:?}:git-${commit_hash:?}
     IF [ "$default_tag" = "latest" ]
-        SAVE IMAGE --push $img_name:stable                 # 'stable'
-        SAVE IMAGE --push $img_name:$major_ver-stable      # major_ver + 'stable'
+        SET tags = $tags \
+            ${img_name:?}:stable \
+            ${img_name:?}:$major_ver-stable
+    END
+    SET tags = $(echo $tags | sort -u)
+    FOR img IN $tags
+        SAVE IMAGE --push $img
     END
