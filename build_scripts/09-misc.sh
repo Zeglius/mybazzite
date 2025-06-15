@@ -74,3 +74,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y iwd
 } || echo "::warning::Couldn't install iwd"
+
+# Add ebpf tools
+{
+	dnf5 install -y bcc-tools bpftrace
+} || echo "::warning::Couldn't install ebpf tools"
