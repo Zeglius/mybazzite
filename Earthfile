@@ -1,6 +1,6 @@
 VERSION --raw-output 0.8
 
-ARG --global BASE_BOOTC_IMAGE=ghcr.io/ublue-os/bazzite-nvidia:latest
+ARG --global BASE_BOOTC_IMAGE=ghcr.io/ublue-os/bazzite-nvidia:testing
 ARG --global TARGET_CTR_REGISTRY=ghcr.io/zeglius
 
 FROM alpine:latest
