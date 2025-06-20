@@ -36,6 +36,15 @@ RUN --mount=type=cache,dst=/var/cache \
     systemctl enable cosmic-greeter && \
     ostree container commit
 
+# Hyprland env
+FROM mybazzite as mybazzite-hyprland
+RUN --mount=type=cache,dst=/var/cache \
+    dnf5 -y copr enable solopasha/hyprland && \
+    dnf5 -y copr enable errornointernet/quickshell && \
+    dnf5 -y install hyprland quickshell && \
+    dnf5 -y copr disable solopasha/hyprland && \
+    dnf5 -y copr disable errornointernet/quickshell && \
+    ostree container commit
 
 # Default to base image
-FROM mybazzite
+FROM mybazzite-hyprland
