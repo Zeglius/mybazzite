@@ -41,4 +41,4 @@ RUN --mount=type=cache,dst=/var/cache \
     ostree container commit
 
 # Default to base image
-FROM mybazzite-cosmic
+FROM mybazzite
