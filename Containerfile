@@ -27,13 +27,7 @@ COPY ./system_files/ /
 FROM mybazzite as mybazzite-cosmic
 
 RUN --mount=type=cache,dst=/var/cache \
-    dnf5 -y copr enable ryanabx/cosmic-epoch && \
-    dnf5 -y install cosmic-desktop && \
-    dnf5 -y copr disable ryanabx/cosmic-epoch && \
-    : "Enable services" && \
-    systemctl disable gddm || : && \
-    systemctl disable sddm || : && \
-    systemctl enable cosmic-greeter && \
+    dnf5 -y install @cosmic-desktop && \
     ostree container commit
 
 # Hyprland env
