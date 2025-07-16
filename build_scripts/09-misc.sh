@@ -91,5 +91,5 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 # Plasma big screen session
 {
 	dnf5 -yq \
-		install plasma-bigscreen-wayland plasma-bigscreen
+		install plasma-bigscreen
 } || echo "::warning::Couldn't install Plasma big screen session"
