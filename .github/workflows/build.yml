@@ -19,6 +19,8 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - run: sudo systemctl stop docker
 
       - name: Mount BTRFS for podman storage
@@ -31,7 +33,6 @@ jobs:
       - uses: earthly/actions/setup-earthly@v1
         with:
           version: v0.8.13
-      - uses: actions/checkout@v4
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
