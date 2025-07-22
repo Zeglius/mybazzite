@@ -24,7 +24,7 @@ jobs:
       - run: sudo systemctl stop docker
 
       - name: Mount BTRFS for podman storage
-        uses: ublue-os/container-storage-action@main
+        uses: Zeglius/container-storage-action@feat/hardcode-bind-mounts
         with:
           target-dir: /var/lib/docker
 
