@@ -80,16 +80,16 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 	dnf5 install -y bcc-tools bpftrace
 } || echo "::warning::Couldn't install ebpf tools"
 
-# Add KDE rounded corners effect
-{
-	dnf5 -y copr enable matinlotfali/KDE-Rounded-Corners &&
-		dnf5 -y copr disable matinlotfali/KDE-Rounded-Corners &&
-		dnf5 -y --enable-repo=copr:copr.fedorainfracloud.org:matinlotfali:KDE-Rounded-Corners \
-			install kwin-effect-roundcorners
-} || echo "::warning::Couldn't install KDE rounded corners effect"
+# # Add KDE rounded corners effect
+# {
+# 	dnf5 -y copr enable matinlotfali/KDE-Rounded-Corners &&
+# 		dnf5 -y copr disable matinlotfali/KDE-Rounded-Corners &&
+# 		dnf5 -y --enable-repo=copr:copr.fedorainfracloud.org:matinlotfali:KDE-Rounded-Corners \
+# 			install kwin-effect-roundcorners
+# } || echo "::warning::Couldn't install KDE rounded corners effect"
 
-# Plasma big screen session
-{
-	dnf5 -yq \
-		install plasma-bigscreen
-} || echo "::warning::Couldn't install Plasma big screen session"
+# # Plasma big screen session
+# {
+# 	dnf5 -yq \
+# 		install plasma-bigscreen
+# } || echo "::warning::Couldn't install Plasma big screen session"
