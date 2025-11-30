@@ -34,14 +34,6 @@ jobs:
         with:
           version: v0.8.13
 
-      - name: Cache Earthly Docker Volumes
-        uses: actions/cache@v3
-        with:
-          path: /var/lib/docker/volumes/earthly-cache
-          key: ${{ runner.os }}-earthly-volumes-${{ hashFiles('Earthfile') }}
-          restore-keys: |
-            ${{ runner.os }}-earthly-volumes-
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
