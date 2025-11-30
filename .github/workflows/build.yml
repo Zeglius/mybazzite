@@ -51,3 +51,6 @@ jobs:
 
       - name: Build image
         run: earthly --ci --push +build
+
+      - name: Fix earthly cache permissions
+        run: sudo chmod 755 /var/lib/docker/volumes/earthly-cache
