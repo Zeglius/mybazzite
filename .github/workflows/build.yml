@@ -30,6 +30,10 @@ jobs:
 
       - run: sudo systemctl start docker
 
+      - uses: earthly/actions/setup-earthly@v1
+        with:
+          version: v0.8.13
+
       - name: Compute Earthly cache key
         id: compute_cache_key
         run: echo "key=docker-volumes-v1-${{ hashFiles('Earthfile') }}" >>$GITHUB_OUTPUT
@@ -43,10 +47,6 @@ jobs:
             docker-volumes-v1-
           volumes: |
             earthly-cache
-
-      - uses: earthly/actions/setup-earthly@v1
-        with:
-          version: v0.8.13
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
