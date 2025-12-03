@@ -34,13 +34,19 @@ jobs:
         with:
           version: v0.8.13
 
-      - name: Cache Earthly Docker Volumes
-        uses: actions/cache@v3
+      - name: Compute Earthly cache key
+        id: compute_cache_key
+        run: echo "key=docker-volumes-v1-${{ hashFiles('Earthfile') }}" >>$GITHUB_OUTPUT
+
+      - name: Restore Earthly Cache
+        id: restore_cache
+        uses: BYK/docker-volume-cache-action/restore@764a1ca3c597389fd2fcd392d7a6e4614a76a4c4
         with:
-          path: /var/lib/docker/volumes/earthly-cache
-          key: ${{ runner.os }}-earthly-volumes-${{ hashFiles('Earthfile') }}
+          key: ${{ steps.compute_cache_key.outputs.key }}
           restore-keys: |
-            ${{ runner.os }}-earthly-volumes-
+            docker-volumes-v1-
+          volumes: |
+            earthly-cache
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
@@ -52,5 +58,10 @@ jobs:
       - name: Build image
         run: earthly --ci --push +build
 
-      - name: Fix earthly cache permissions
-        run: sudo chmod 755 /var/lib/docker/volumes/earthly-cache
+      - name: Save Earthly Volume Cache
+        if: steps.restore_cache.outputs.cache-hit != 'true'
+        uses: BYK/docker-volume-cache-action/save@764a1ca3c597389fd2fcd392d7a6e4614a76a4c4
+        with:
+          key: ${{ steps.compute_cache_key.outputs.key }}
+          volumes: |
+            earthly-cache
