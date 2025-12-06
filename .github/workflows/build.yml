@@ -50,7 +50,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
-        run: earthly --ci --push +build
+        run: |
+          owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
+          earthly --remote-cache ghcr.io/${owner}/earthly-cache --ci --push +build
 
       - name: Fix earthly cache permissions
         run: sudo chmod 755 /var/lib/docker/volumes/earthly-cache
