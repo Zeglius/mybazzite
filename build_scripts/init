@@ -10,6 +10,7 @@ shopt -s nullglob
 for file in ./??-*.sh; do
     if [ ! -x "$file" ]; then
         echo "::warning::Build script '$file' is not executable. Skipping..."
+        continue
     fi
     echo "::group::START $file"
     $file
