@@ -52,7 +52,14 @@ jobs:
       - name: Build image
         run: |
           owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
-          earthly --remote-cache ghcr.io/${owner}/earthly-cache --ci --push +build
+          branch="${{ github.ref_type == 'branch' && github.ref_name }}"
+          commit_hash="$(echo ${{ github.sha }} | cut -c1-7)"
+
+          earthly --ci --push \
+            --remote-cache ghcr.io/${owner}/earthly-cache \
+            +build \
+            --branch="${branch}" \
+            --commit_hash="${commit_hash}"
 
       - name: Fix earthly cache permissions
         run: sudo chmod 755 /var/lib/docker/volumes/earthly-cache

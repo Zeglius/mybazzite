@@ -3,14 +3,6 @@ VERSION --raw-output --wildcard-copy 0.8
 ARG --global BASE_IMAGE=${BASE_IMAGE:-ghcr.io/ublue-os/bazzite-nvidia:latest}
 ARG --global TARGET_CTR_REGISTRY=${TARGET_CTR_REGISTRY:-ghcr.io/zeglius}
 
-FROM alpine:latest
-RUN apk add --no-cache \
-    git sed coreutils \
-    || :
-
-COPY ./. ./
-ARG --global branch=$(git branch --show-current)
-ARG --global commit_hash=$(git rev-parse --short HEAD)
 
 INSTALL_PACKAGES:
     FUNCTION
@@ -19,17 +11,25 @@ INSTALL_PACKAGES:
     RUN find /run/.posthooks -type f -name "*.sh" -print -executable -exec {} \; -exec rm {} \; && \
         rm -rf /run/.posthooks
 
+
 build:
+    ARG --required branch
+    ARG --required commit_hash
+
     FROM DOCKERFILE \
         -f Containerfile \
         --build-arg BASE_IMAGE=$BASE_IMAGE \
         .
     DO +INSTALL_PACKAGES
-    DO +SAVE_IMAGE --img_name=${TARGET_CTR_REGISTRY}/mybazzite
+    DO +SAVE_IMAGE --img_name=${TARGET_CTR_REGISTRY}/mybazzite --branch=$branch --commit_hash=$commit_hash
+
 
 SAVE_IMAGE:
     FUNCTION
     ARG img_name
+    ARG --required branch
+    ARG --required commit_hash
+
     ARG default_tag=$(echo $branch | sed -E 's/(main|master)/latest/')
     LET build_date = $(date +%Y%m%d)
     LET major_ver = $(lsb_release -rs)
