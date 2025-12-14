@@ -1,6 +1,6 @@
 VERSION --raw-output --wildcard-copy 0.8
 
-ARG --global BASE_BOOTC_IMAGE=${BASE_BOOTC_IMAGE:-ghcr.io/ublue-os/bazzite-nvidia:latest}
+ARG --global BASE_IMAGE=${BASE_IMAGE:-ghcr.io/ublue-os/bazzite-nvidia:latest}
 ARG --global TARGET_CTR_REGISTRY=${TARGET_CTR_REGISTRY:-ghcr.io/zeglius}
 
 FROM alpine:latest
@@ -20,7 +20,6 @@ INSTALL_PACKAGES:
         rm -rf /run/.posthooks
 
 build:
-    ARG BASE_IMAGE=${BASE_BOOTC_IMAGE}
     FROM DOCKERFILE \
         -f Containerfile \
         --build-arg BASE_IMAGE=$BASE_IMAGE \
