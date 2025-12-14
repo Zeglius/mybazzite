@@ -1,0 +1,19 @@
+VERSION 0.8
+
+build:
+    FROM debian:bookworm
+    WORKDIR /work
+    RUN apt-get update && apt-get install -y curl rsync
+    RUN base_url="https://pkgs.zabbly.com/incus/stable/pool/main/i/incus/" && \
+        suffix="$(curl -s $base_url | \
+            grep -P -o '\<a\shref=\"\Kincus-ui-canonical_\d+\.\d+\.\d+-ubuntu\d+\.\d+-\d+_amd64\.deb' | \
+            sort | tail -1)" && \
+        curl -s "${base_url}${suffix}" -o incus-ui.deb && \
+        mkdir ./extracted && \
+        dpkg -x ./incus-ui.deb ./extracted/ && \
+        rm incus-ui.deb && \
+        mkdir -p /out/usr/share/my-incus-ui/ && \
+        rsync -vaH ./extracted/opt/incus/. /out/usr/share/my-incus-ui/ && \
+        mkdir -p /out/usr/lib/systemd/system/incus.service.d
+    COPY ./10-env.conf /out/usr/lib/systemd/system/incus.service.d/10-env.conf
+    SAVE ARTIFACT /out
