@@ -19,6 +19,7 @@ COPY ./build_scripts/ /tmp/build_scripts/
 RUN --mount=type=cache,dst=/var/cache \
     mkdir -p /var/lib/alternatives \
     && dnf5 -y update uupd \
+    && dnf install -yq incus incus-tools incus-client \
     && /tmp/build_scripts/init
 
 COPY ./system_files/ /
