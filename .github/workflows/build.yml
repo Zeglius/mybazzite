@@ -7,22 +7,17 @@ on:
     paths-ignore: [".github/workflows/**"]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ inputs.brand_name}}-${{ inputs.stream_name }}
+  cancel-in-progress: true
+
 jobs:
   build-and-publish:
-    name: Build and publish ${{ matrix.base_image }}
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ matrix.base_image }}
-      cancel-in-progress: true
+    name: Build and publish
     permissions:
       packages: write
       id-token: write
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base_image:
-          - ghcr.io/ublue-os/bazzite-nvidia:latest
-          - ghcr.io/ublue-os/bazzite:latest
     steps:
       - uses: actions/checkout@v4
 
@@ -54,14 +49,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set image name
-        run: |
-          image_name=$(echo "${{ matrix.base_image }}" | sed -E -e 's|([^/]*/)*||' -e 's|:.*||')
-          echo "IMAGE_NAME=$image_name" >> $GITHUB_ENV
-
       - name: Build image
-        env:
-          IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
           owner="$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')"
           branch="${{ github.ref_type == 'branch' && github.ref_name }}"
@@ -70,10 +58,8 @@ jobs:
           earthly --ci --push \
             --remote-cache ghcr.io/${owner}/earthly-cache \
             +build \
-            --BASE_IMAGE=${{ matrix.base_image }} \
             --branch="${branch}" \
-            --commit_hash="${commit_hash}" \
-            --IMAGE_NAME="${IMAGE_NAME}"
+            --commit_hash="${commit_hash}"
 
       - name: Fix earthly cache permissions
         run: sudo chmod 755 /var/lib/docker/volumes/earthly-cache
