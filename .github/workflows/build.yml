@@ -7,13 +7,12 @@ on:
     paths-ignore: [".github/workflows/**"]
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ matrix.base_image }}
-  cancel-in-progress: true
-
 jobs:
   build-and-publish:
     name: Build and publish ${{ matrix.base_image }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref || github.run_id }}-${{ matrix.base_image }}
+      cancel-in-progress: true
     permissions:
       packages: write
       id-token: write
