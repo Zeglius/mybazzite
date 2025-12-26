@@ -93,3 +93,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 # 	dnf5 -yq \
 # 		install plasma-bigscreen
 # } || echo "::warning::Couldn't install Plasma big screen session"
+
+# Add inotify-tools
+{
+	dnf5 install -y inotify-tools
+} || echo "::warning::Couldn't install inotify-tools"
