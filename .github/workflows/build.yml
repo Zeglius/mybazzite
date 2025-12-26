@@ -4,7 +4,12 @@ name: Build Image
 on:
   push:
     branches: [main]
-    paths-ignore: [".github/workflows/**"]
+    paths:
+      - packages/**
+      - build_scripts/**
+      - system_files/**
+      - Containerfile
+      - Earthfile
   workflow_dispatch:
 
 concurrency:
