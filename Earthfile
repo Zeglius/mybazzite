@@ -16,6 +16,9 @@ build:
     ARG branch
     ARG --required commit_hash
     ARG IMAGE_NAME
+    IF [ "$IMAGE_NAME" = "" ]
+        SET IMAGE_NAME = $(echo "$BASE_IMAGE" | sed -E -e 's|([^/]*/)*||' -e 's|:.*||')
+    END
     FROM DOCKERFILE \
         -f Containerfile \
         --build-arg BASE_IMAGE=$BASE_IMAGE \
