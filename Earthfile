@@ -13,24 +13,27 @@ INSTALL_PACKAGES:
 
 
 build:
-    ARG --required branch
+    ARG branch
     ARG --required commit_hash
-
+    ARG IMAGE_NAME
+    IF [ "$IMAGE_NAME" = "" ]
+        SET IMAGE_NAME = $(echo "$BASE_IMAGE" | sed -E -e 's|([^/]*/)*||' -e 's|:.*||')
+    END
     FROM DOCKERFILE \
         -f Containerfile \
         --build-arg BASE_IMAGE=$BASE_IMAGE \
         .
     DO +INSTALL_PACKAGES
-    DO +SAVE_IMAGE --img_name=${TARGET_CTR_REGISTRY}/mybazzite --branch=$branch --commit_hash=$commit_hash
+    DO +SAVE_IMAGE --img_name=${TARGET_CTR_REGISTRY}/${IMAGE_NAME} --branch=$branch --commit_hash=$commit_hash
 
 
 SAVE_IMAGE:
     FUNCTION
     ARG img_name
-    ARG --required branch
+    ARG branch
     ARG --required commit_hash
 
-    ARG default_tag=$(echo $branch | sed -E 's/(main|master)/latest/')
+    ARG default_tag=$(echo ${branch:-git-$commit_hash} | sed -E 's/(main|master)/latest/')
     LET build_date = $(date +%Y%m%d)
     LET major_ver = $(lsb_release -rs)
     LET tags = ${img_name:?}:$default_tag \
