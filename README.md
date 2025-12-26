@@ -60,7 +60,7 @@ Modify `iso.toml` to point to your custom image before generating an ISO.
 
 ### build.yml
 
-This workflow uses Earthly to create your custom OCI image and publishes it to the GitHub Container Registry (GHCR). It invokes the `build` target within the `Earthfile`, passing necessary arguments such as `BASE_IMAGE`, `branch`, `commit_hash`, and `IMAGE_NAME`.
+This workflow uses Earthly to create your custom OCI image and publishes it to the GitHub Container Registry (GHCR). It invokes the `build` target within the `Earthfile`, passing necessary arguments such as `BASE_IMAGE`, `branch`, and `commit_hash`.
 
 #### Container Signing
 
