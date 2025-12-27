@@ -98,3 +98,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y inotify-tools
 } || echo "::warning::Couldn't install inotify-tools"
+
+# Add evtest
+{
+	dnf5 install -y evtest
+} || echo "::warning::Couldn't install evtest"
