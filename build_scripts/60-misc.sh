@@ -103,3 +103,8 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y evtest
 } || echo "::warning::Couldn't install evtest"
+
+# Add strace
+{
+	dnf5 install -y strace
+} || echo "::warning::Couldn't install strace"
