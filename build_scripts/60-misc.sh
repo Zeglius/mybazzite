@@ -108,3 +108,7 @@ trap 'skip_on_err "Couldnt setup miscellanea stuff"' ERR
 {
 	dnf5 install -y strace
 } || echo "::warning::Couldn't install strace"
+
+{
+	dnf5 install -y /usr/bin/pg_config
+} || echo "::warning::Couldn't install pg_config"
